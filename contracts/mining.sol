@@ -106,6 +106,8 @@ contract mining {
 
     event Withdraw(uint256 _miningId, address user, uint256 reward);
 
+    event ReceiveToken(address user, uint256 amount);
+
     // 质押BNB
     function stakingBNB(uint256 _miningId)
         external
@@ -190,8 +192,6 @@ contract mining {
         }
     }
 
-    //
-
     // 计算收益
     function getReward(uint256 _miningId) public view returns (uint256) {
         uint256 rate = Pools[_miningId].rate;   // 收益率（百分比）
@@ -213,6 +213,12 @@ contract mining {
             StakingUsers[_miningId][msg.sender].alreadyWithdrawAmount += reward;
         }
         emit Withdraw(_miningId, msg.sender, reward);
+    }
+
+    // 领取测试币
+    function receiveToken(uint256 amount) external {
+        IERC20(HEY).transfer(msg.sender, amount);
+        emit ReceiveToken(msg.sender, amount);
     }
 
     function getTokenBalance(address _tokenAddress) external view returns (uint256) {
